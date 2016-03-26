@@ -1,0 +1,19 @@
+﻿Delete from table
+======================
+Specific Row:
+DELETE FROM [Table] WHERE [ID] = [7];
+
+Whole Table:
+DELETE FROM [TABLE];
+
+Insert into Table
+======================
+All Columns:
+INSERT INTO COMPANY VALUES (7, 'James', 24, 'Houston', 10000.00 );
+
+Specific Columns:
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );
+
+Update a Table Row
+===================
+UPDATE [COMPANY] SET [ADDRESS] = ['Texas'] WHERE [ID] = [6];
