@@ -45,6 +45,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lTotal = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.bHistory = new System.Windows.Forms.Button();
             this.flpCategory.SuspendLayout();
             this.flpServices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDisplayTable)).BeginInit();
@@ -229,11 +230,23 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Total";
             // 
+            // bHistory
+            // 
+            this.bHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bHistory.Location = new System.Drawing.Point(959, 81);
+            this.bHistory.Name = "bHistory";
+            this.bHistory.Size = new System.Drawing.Size(290, 59);
+            this.bHistory.TabIndex = 8;
+            this.bHistory.Text = "History";
+            this.bHistory.UseVisualStyleBackColor = true;
+            this.bHistory.Click += new System.EventHandler(this.bHistory_Click);
+            // 
             // Receipt_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1261, 655);
+            this.Controls.Add(this.bHistory);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.dgvDisplayTable);
             this.Controls.Add(this.bDone);
@@ -272,5 +285,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.Button bHistory;
     }
 }

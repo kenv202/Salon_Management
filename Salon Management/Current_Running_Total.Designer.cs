@@ -51,6 +51,7 @@
             this.Name = "Current_Running_Total";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Total";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.dgvTotal)).EndInit();
             this.ResumeLayout(false);
 

@@ -17,3 +17,7 @@ INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (3, 'Teddy', 23, 'Norway
 Update a Table Row
 ===================
 UPDATE [COMPANY] SET [ADDRESS] = ['Texas'] WHERE [ID] = [6];
+
+Add new Column to existing table
+=================================
+ALTER TABLE {tableName} ADD COLUMN COLNew {type};

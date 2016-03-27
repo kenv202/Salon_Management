@@ -54,6 +54,12 @@
     <Compile Include="Current_Running_Total.Designer.cs">
       <DependentUpon>Current_Running_Total.cs</DependentUpon>
     </Compile>
+    <Compile Include="History.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="History.Designer.cs">
+      <DependentUpon>History.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +85,9 @@
     <Compile Include="SQL_Setup.cs" />
     <EmbeddedResource Include="Current_Running_Total.resx">
       <DependentUpon>Current_Running_Total.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="History.resx">
+      <DependentUpon>History.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

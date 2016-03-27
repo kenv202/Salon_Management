@@ -228,7 +228,7 @@ namespace Salon_Management
                 try
                 {
                     //insert into DB
-                    InsertIntoDB("Activity", "\"" + _userName + "\",\"" + DateTime.Now.ToShortDateString() + "\",\"" + dgvDisplayTable.Rows[i].Cells[0].Value.ToString() + "\",\"" + dgvDisplayTable.Rows[i].Cells[1].Value.ToString() + "\",\"" + ticketNumber + "\"");
+                    InsertIntoDB("Activity", "\"" + _userName + "\",\"" + DateTime.Now.ToShortDateString() + "\",\"" + dgvDisplayTable.Rows[i].Cells[0].Value.ToString() + "\",\"" + dgvDisplayTable.Rows[i].Cells[1].Value.ToString() + "\",\"" + ticketNumber + "\",\"" + DateTime.Now.ToString("hh:mm:ss tt") + "\"");
                 }
                 catch(Exception e1)
                 {
@@ -263,6 +263,14 @@ namespace Salon_Management
         {
             Graphics g = e.Graphics;
             g.DrawString(textToPrint.ToString(), new Font("Courier New", 8), new SolidBrush(Color.Black), 0, 0);
+        }
+
+        private void bHistory_Click(object sender, EventArgs e)
+        {
+            using(History history = new History(_userName))
+            {
+                history.ShowDialog();
+            }
         }
     }
 }

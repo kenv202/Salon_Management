@@ -18,5 +18,14 @@ namespace Salon_Management
             textToPrint.AppendLine("-".PadRight(27, '-'));
             return textToPrint;
         }
+        public static StringBuilder Header(string workerID, string ticketNumber,string date)
+        {
+            StringBuilder textToPrint = new StringBuilder();
+            textToPrint.AppendLine(string.Format("{0,-27}", date));
+            textToPrint.AppendLine("-".PadRight(27, '-'));
+            textToPrint.AppendLine(string.Format("{0,-24}{1,3}", workerID, ticketNumber));
+            textToPrint.AppendLine("-".PadRight(27, '-'));
+            return textToPrint;
+        }
     }
 }

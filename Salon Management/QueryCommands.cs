@@ -26,6 +26,14 @@ namespace Salon_Management
             reader.Read();
             return reader[selectWhat].ToString();
         }
+        public static string QueryDB(string cmd,string column)
+        {
+            string sql = cmd;
+            SQLiteCommand command = new SQLiteCommand(sql, SQL_Setup.m_dbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            return reader[column].ToString();
+        }
         public static string QueryDBMax(string table, string selectWhat, string userName)
         {
             string sql = "select max(" + selectWhat + ") from " + table + " where UserID = " + "\"" + userName + "\"";
@@ -58,6 +66,5 @@ namespace Salon_Management
             reader.Read();
             return reader["sum(" + selectWhat + ")"].ToString();
         }
-
     }
 }
