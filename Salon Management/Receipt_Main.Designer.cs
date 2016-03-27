@@ -46,6 +46,7 @@
             this.lTotal = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.bHistory = new System.Windows.Forms.Button();
+            this.bEditPrice = new System.Windows.Forms.Button();
             this.flpCategory.SuspendLayout();
             this.flpServices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDisplayTable)).BeginInit();
@@ -241,11 +242,23 @@
             this.bHistory.UseVisualStyleBackColor = true;
             this.bHistory.Click += new System.EventHandler(this.bHistory_Click);
             // 
+            // bEditPrice
+            // 
+            this.bEditPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bEditPrice.Location = new System.Drawing.Point(654, 519);
+            this.bEditPrice.Name = "bEditPrice";
+            this.bEditPrice.Size = new System.Drawing.Size(299, 59);
+            this.bEditPrice.TabIndex = 9;
+            this.bEditPrice.Text = "Edit Price";
+            this.bEditPrice.UseVisualStyleBackColor = true;
+            this.bEditPrice.Click += new System.EventHandler(this.bEditPrice_Click);
+            // 
             // Receipt_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1261, 655);
+            this.Controls.Add(this.bEditPrice);
             this.Controls.Add(this.bHistory);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.dgvDisplayTable);
@@ -286,5 +299,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.Button bHistory;
+        private System.Windows.Forms.Button bEditPrice;
     }
 }

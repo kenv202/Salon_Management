@@ -22,6 +22,8 @@ namespace Salon_Management
         String _userName = "";
         String currentCategory = "";
         String currentButtonService = "";
+        //Boolean
+        Boolean editPrice = false;
         //Enum
         enum Cycle
         {
@@ -45,21 +47,53 @@ namespace Salon_Management
             mouseDownTimer.Elapsed += mouseDownTimer_Elapsed;
         }
 
+        void openPriceEditorWindow()
+        {
+            using (PriceEditor pe = new PriceEditor())
+            {
+                if (pe.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    //search to see if the service is in the additonal services table
+                    Boolean found = false;
+                    try
+                    {
+                        string sql = "select Service_Name from Additional_Services where Service_Name = " + "\"" + currentButtonService + "\"";
+                        SQLiteCommand command = new SQLiteCommand(sql, SQL_Setup.m_dbConnection);
+                        SQLiteDataReader reader = command.ExecuteReader();
+                        reader.Read();
+                        reader["Service_Name"].ToString();
+                        found = true;
+                    }
+                    catch
+                    {
+                        found = false;
+                    }
+                    Invoke((MethodInvoker)(() =>
+                    {
+                        if (found)
+                        {
+                            dgvDisplayTable.Rows.Add("  +" + currentButtonService, pe.lCurrentPriceValue.Text);
+                            sumColumn(1);
+                            currentButtonService = "";
+                        }
+                        else 
+                        {
+                            dgvDisplayTable.Rows.Add(currentButtonService, pe.lCurrentPriceValue.Text);
+                            sumColumn(1);
+                            currentButtonService = "";
+                        }
+                    }));
+                }
+            }
+        }
+
         void mouseDownTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             mouseDownTimer.Stop();
-            //bring up edit window
-            using(PriceEditor pe = new PriceEditor())
+            if (!editPrice)
             {
-                if(pe.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        dgvDisplayTable.Rows.Add(currentButtonService, pe.lCurrentPriceValue.Text);
-                        sumColumn(1);
-                        currentButtonService = "";
-                    }));          
-                }
+                //bring up edit window
+                openPriceEditorWindow();
             }
         }
 
@@ -130,6 +164,15 @@ namespace Salon_Management
              mouseDownTimer.Stop();
         }    
 
+        void resetEditPrice()
+        {
+            Invoke((MethodInvoker)(() =>
+            {
+                editPrice = false;
+                bEditPrice.BackColor = Color.Transparent;
+            }));
+        }
+
         void serviceButton_Click(object sender, EventArgs e)
         {
             if (state == Cycle.Initial)
@@ -146,15 +189,31 @@ namespace Salon_Management
                 {
                     flpServices.Controls.Clear();
                 }
-                //add it as the first item to the recipt
-                dgvDisplayTable.Rows.Add((sender as Button).Text, QueryCommands.QueryDBForPrice(currentCategory,(sender as Button).Text));
-                sumColumn(1);
+                if (editPrice)
+                {
+                    openPriceEditorWindow();
+                    resetEditPrice();
+                }
+                else
+                {
+                    //add it as the first item to the recipt
+                    dgvDisplayTable.Rows.Add((sender as Button).Text, QueryCommands.QueryDBForPrice(currentCategory, (sender as Button).Text));
+                    sumColumn(1);
+                }
             }
             else if (state == Cycle.Service_Selected)
             {
-                //Here we would add the additional services selected to the reciept
-                dgvDisplayTable.Rows.Add("  +" + (sender as Button).Text, QueryCommands.QueryDBForPrice("Additional_Services", (sender as Button).Text));
-                sumColumn(1);
+                if (editPrice)
+                {
+                    openPriceEditorWindow();
+                    resetEditPrice();
+                }
+                else
+                {
+                    //Here we would add the additional services selected to the reciept
+                    dgvDisplayTable.Rows.Add("  +" + (sender as Button).Text, QueryCommands.QueryDBForPrice("Additional_Services", (sender as Button).Text));
+                    sumColumn(1);
+                }
             }
         }
 
@@ -182,8 +241,16 @@ namespace Salon_Management
             }
             else if(state == Cycle.Service_Selected)
             {
-                dgvDisplayTable.Rows.Add(category, QueryCommands.QueryDBForPrice(currentCategory, category));
-                sumColumn(1);
+                if (editPrice)
+                {
+                    openPriceEditorWindow();
+                    resetEditPrice();
+                }
+                else
+                {
+                    dgvDisplayTable.Rows.Add(category, QueryCommands.QueryDBForPrice(currentCategory, category));
+                    sumColumn(1);
+                }
             }
         }
 
@@ -271,6 +338,12 @@ namespace Salon_Management
             {
                 history.ShowDialog();
             }
+        }
+
+        private void bEditPrice_Click(object sender, EventArgs e)
+        {
+            bEditPrice.BackColor = Color.Green;
+            editPrice = true;
         }
     }
 }
