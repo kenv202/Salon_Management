@@ -14,49 +14,32 @@ namespace Salon_Management
     public partial class History : Form
     {
         StringBuilder textToPrint = new StringBuilder();
-        public History(string _userName)
+        string _userName = "";
+        int ticketNumber = 0;
+        public History(string userName)
         {
             InitializeComponent();
-            LoadTicket(_userName);
+            _userName = userName;
+            LoadTicket();
         }
 
-        void LoadTicket(string _userName)
+        void LoadTicket()
         {
             //try and get the ticket number if it exists
-            int ticketNumber = 0;
             try
             {
                 ticketNumber = Convert.ToInt32(QueryCommands.QueryDBMax("Activity", "Ticket_Number", _userName, DateTime.Now.ToShortDateString()));
+                for(int i = 1 ; i <= ticketNumber; i++)
+                {
+                    cbTicketNumber.Items.Add(i);
+                }
+                cbTicketNumber.Items.Add("ALL");
+                cbTicketNumber.SelectedIndex = 0;
             }
             catch
             {
                 MessageBox.Show(_userName + " does not appear to have printed any ticket yet today.");
             }
-            int total = 0;
-            //loop through each tickets
-            for (int i = 1; i <= ticketNumber; i++)
-            {
-                //header
-                textToPrint.Append(Receipt_Format.Header(_userName, i.ToString(),DateTime.Now.ToShortDateString() + " " + QueryCommands.QueryDB("select Timestamp from Activity where Ticket_Number = " + i ,"Timestamp")));
-                //the actual items
-                string sql = "select * from Activity where UserID = " + "\"" + _userName + "\"" + " and Date = " + "\"" + DateTime.Now.ToShortDateString() + "\"" + " and Ticket_Number = " + "\"" + i.ToString()+ "\"";
-                int subTotal = 0;
-                SQLiteCommand command = new SQLiteCommand(sql, SQL_Setup.m_dbConnection); 
-                SQLiteDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    textToPrint.AppendLine(string.Format("{0,-24}{1,3}", reader["Service"], reader["Price"]));
-                    subTotal += Convert.ToInt32(reader["Price"]);
-                }
-                textToPrint.AppendLine();
-                textToPrint.AppendLine(string.Format("{0,-24}{1,3}", "SUBTOTAL", subTotal));
-                textToPrint.AppendLine(string.Format("{0,-24}{1,3}", "TOTAL", total+=subTotal));
-                //next receipt
-                textToPrint.AppendLine();
-            }
-
-            //display it
-            pbPrintPreview.Invalidate();
         }
 
         private void pbPrintPreview_Paint(object sender, PaintEventArgs e)
@@ -65,6 +48,79 @@ namespace Salon_Management
 
             g.DrawString(textToPrint.ToString(), new Font("Courier New", 8),
          new SolidBrush(Color.Black), 0, 0);
+        }
+
+        private void bShow_Click(object sender, EventArgs e)
+        {
+            textToPrint.Clear();
+            int total = 0;
+            int additonal_length = 0;
+            int height_add = 20;
+            //loop through each tickets
+            for (int i = 1; i <= ticketNumber; i++)
+            {
+                if(cbTicketNumber.SelectedItem.ToString().Equals("ALL"))
+                {
+                    //header
+                    textToPrint.Append(Receipt_Format.Header(_userName, i.ToString(), DateTime.Now.ToShortDateString() + " " + QueryCommands.QueryDB("select Timestamp from Activity where Ticket_Number = " + i, "Timestamp")));
+                    additonal_length += height_add;
+                }
+                else if (Convert.ToInt32(cbTicketNumber.SelectedItem.ToString()) == i)
+                {
+                    //header
+                    textToPrint.Append(Receipt_Format.Header(_userName, i.ToString(), DateTime.Now.ToShortDateString() + " " + QueryCommands.QueryDB("select Timestamp from Activity where Ticket_Number = " + i, "Timestamp")));
+                    additonal_length += height_add;
+                }
+                //the actual items
+                string sql = "select * from Activity where UserID = " + "\"" + _userName + "\"" + " and Date = " + "\"" + DateTime.Now.ToShortDateString() + "\"" + " and Ticket_Number = " + "\"" + i.ToString() + "\"";
+                int subTotal = 0;
+                SQLiteCommand command = new SQLiteCommand(sql, SQL_Setup.m_dbConnection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (cbTicketNumber.SelectedItem.ToString().Equals("ALL"))
+                    {
+                        textToPrint.AppendLine(string.Format("{0,-24}{1,3}", reader["Service"], reader["Price"]));
+                        additonal_length += height_add;
+                    }
+                    else if (Convert.ToInt32(cbTicketNumber.SelectedItem.ToString()) == i)
+                    {
+                        textToPrint.AppendLine(string.Format("{0,-24}{1,3}", reader["Service"], reader["Price"]));
+                        additonal_length += height_add;
+                    }
+                    subTotal += Convert.ToInt32(reader["Price"]);                
+                }
+                total += subTotal;
+                if (cbTicketNumber.SelectedItem.ToString().Equals("ALL"))
+                {
+                    textToPrint.AppendLine();
+                    additonal_length += height_add;
+                    textToPrint.AppendLine(string.Format("{0,-24}{1,3}", "SUBTOTAL", subTotal));
+                    additonal_length += height_add;
+                    textToPrint.AppendLine(string.Format("{0,-24}{1,3}", "TOTAL", total));
+                    additonal_length += height_add;
+                    //next receipt
+                    textToPrint.AppendLine();
+                    additonal_length += height_add;
+                }
+                else  if (Convert.ToInt32(cbTicketNumber.SelectedItem.ToString()) == i)
+                {
+                    textToPrint.AppendLine();
+                    additonal_length += height_add;
+                    textToPrint.AppendLine(string.Format("{0,-24}{1,3}", "SUBTOTAL", subTotal));
+                    additonal_length += height_add;
+                    textToPrint.AppendLine(string.Format("{0,-24}{1,3}", "TOTAL", total));
+                    additonal_length += height_add;
+                    //next receipt
+                    textToPrint.AppendLine();
+                    additonal_length += height_add;
+                }
+            }
+            //resize the picturebox based on how much text we added
+            pbPrintPreview.Size = new System.Drawing.Size(213, additonal_length);
+            //display it
+            pbPrintPreview.Invalidate();
+
         }
     }
 }
